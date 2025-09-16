@@ -34,9 +34,7 @@ const TopNav = () => {
           label={"대시보드로"}
           clickHandler={exitBtnClickHandler}
           color="black"
-          hoverColor="white"
           bgColor="white"
-          hoverBgColor="black"
           border={"solid 1px black"}
         />
       </div>
