@@ -1,6 +1,6 @@
-import { client } from "../client"
+import { ApiResponse, client } from "../client"
 
-interface loginApiResponse {
+interface loginApiResponse extends ApiResponse {
     accessToken: string;
     tokenType: string;
     memberId: number;

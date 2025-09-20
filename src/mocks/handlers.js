@@ -3,8 +3,7 @@ import { http, HttpResponse } from "msw";
 export const handlers = [
   http.get("*/company-job-list", ({ request }) => {
     return HttpResponse.json({
-      isSuccess: true,
-      code: 200,
+      status: 200,
       message: "회사 리스트 조회 성공",
       data: {
         company: ["애플", "메타", "삼성", "아마존"],
@@ -18,8 +17,7 @@ export const handlers = [
     const job = url.searchParams.get("job");
     console.log(company, job);
     return HttpResponse.json({
-      isSuccess: true,
-      code: 200,
+      status: 200,
       message: "인터뷰 질문 조회 성공",
       data: [
         {
@@ -72,8 +70,7 @@ export const handlers = [
 
     // 업로드 성공 응답 (실 서비스라면 업로드 처리 결과/URL 등을 내려주면 됨)
     return HttpResponse.json({
-      isSuccess: true,
-      code: 200,
+      status: 200,
       message: "오디오 업로드 성공",
       data: {
         uploadId: crypto.randomUUID?.() ?? String(Date.now()),
@@ -89,8 +86,7 @@ export const handlers = [
     const job = url.searchParams.get("job");
     console.log(company, job);
     return HttpResponse.json({
-      isSuccess: true,
-      code: 200,
+      status: 200,
       message: "면접 결과 조회 성공",
       data: {
         totalScore: 9,
@@ -158,8 +154,7 @@ export const handlers = [
   }),
   http.get("*/interview-records", ({ request }) => {
     return HttpResponse.json({
-      isSuccess: true,
-      code: 200,
+      status: 200,
       message: "인터뷰 기록 조회 성공",
       data: [
         {
@@ -203,8 +198,7 @@ export const handlers = [
 
     console.log(id);
     return HttpResponse.json({
-      isSuccess: true,
-      code: 200,
+      status: 200,
       message: "면접 레코드 상세정보 조회 성공",
       data: {
         totalScore: 9,

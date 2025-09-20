@@ -1,9 +1,8 @@
 import ky from "ky";
 
 export interface ApiResponse<T = unknown> {
-  code: number;
+  status: number;
   message: string;
-  isSuccess: boolean;
   data?: T;
 }
 
