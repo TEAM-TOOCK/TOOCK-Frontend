@@ -3,6 +3,9 @@ import React from "react";
 import { INTERVIEW_RULES_DETAIL } from "../constants/interviewRules.constants";
 import Button from "@/app/ui/Button";
 import { useRouter } from "next/navigation";
+import { initiateInterview, InterviewQuestion } from "@/app/api/interview/fetchInterviewQuestions";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInterviewSessionStore } from "@/stores/interviewSession.store";
 
 const InterviewSettingModal = ({
   setIsModal,
@@ -10,15 +13,31 @@ const InterviewSettingModal = ({
   setIsModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const company = useInterviewStore((s) => s.selectedCompany);
+  const field = useInterviewStore((s) => s.selectedField);
   const job = useInterviewStore((s) => s.selectedJob);
   const router = useRouter();
+
+  const { mutate, isPending, isError, data, error } = useMutation({
+    mutationFn: () => initiateInterview(company, field, job),
+    onSuccess: (data: InterviewQuestion) => {
+      useInterviewSessionStore.getState().setSession({
+        sessionId: data.interviewSessionId,
+        questionText: data.questionText,
+      });
+      router.push(`/interview`);
+    },
+    onError: (error: Error) => {
+      console.error("Interview initiation failed:", error);
+      alert("면접 시작 중 오류가 발생했습니다.");
+    },
+  });
 
   const cancelBtnClickHandler = () => {
     setIsModal(false);
   };
 
   const startInterviewBtnClickHandler = () => {
-    router.push(`/interview`);
+    mutate();
   };
 
   return (
