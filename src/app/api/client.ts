@@ -10,6 +10,12 @@ export interface ApiResponse<T = unknown> {
 export const client = ky.create({
   prefixUrl: process.env.NEXT_PUBLIC_API_URL,
   hooks: {
+    beforeRequest: [
+      (request) => {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (accessToken) request.headers.set("Authorization", `Bearer ${accessToken}`);
+      },
+    ],
     afterResponse: [
       async (request, options, response) => {
         const apiResponse = (await response.clone().json()) as ApiResponse;
