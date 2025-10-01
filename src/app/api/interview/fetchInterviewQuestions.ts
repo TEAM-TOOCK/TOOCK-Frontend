@@ -5,7 +5,7 @@ export interface InterviewQuestion {
   questionText: string;
 }
 
-interface InterviewQuestionApiResponse extends ApiResponse {
+export interface InterviewQuestionApiResponse extends ApiResponse {
   data: InterviewQuestion;
 }
 
@@ -27,7 +27,7 @@ export const fetchInterviewQuestions = async (company: string, job: string) => {
       .get(`interview-questions?company=${company}&job=${job}`)
       .json<InterviewQuestionApiResponse>();
     console.log(response);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("[Interview Question Fetch Error]", error);
     return null;

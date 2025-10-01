@@ -1,29 +1,27 @@
 import { client } from "../client";
+import { InterviewQuestionApiResponse } from "./fetchInterviewQuestions";
 
-export const sendInterviewData = async (audioBlob: Blob) => {
-  if (!audioBlob) {
+export const sendInterviewData = async (interviewSessionId: number, audioFile: Blob) => {
+  if (!audioFile) {
     alert("업로드할 녹음이 없습니다.");
     return;
   }
 
   const form = new FormData();
-  const ext = audioBlob.type.includes("ogg")
-    ? "ogg"
-    : audioBlob.type.includes("mp4")
-    ? "m4a"
-    : "webm";
-  form.append("file", audioBlob, `record.${ext}`);
+  const ext = audioFile.type.includes("ogg") ? "ogg" : audioFile.type.includes("mp4") ? "m4a" : "webm";
+  form.append("audioFile", audioFile, `record.${ext}`);
+  form.append("interviewSessionId", String(interviewSessionId));
 
   try {
     const response = await client
-      .post("send-interview", {
+      .post("interviews/next", {
         body: form,
       })
-      .json();
+      .json<InterviewQuestionApiResponse>();
     console.log("결과:", response);
-    alert("업로드 성공");
+    return response.data;
   } catch (err) {
     console.error("업로드 실패:", err);
-    alert("업로드 실패");
+    throw Error("업로드 실패");
   }
 };

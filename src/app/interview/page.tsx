@@ -11,26 +11,21 @@ const Page = () => {
   const company = useInterviewStore((s) => s.selectedCompany);
   const job = useInterviewStore((s) => s.selectedJob);
   const [questionNum, setQuestionNum] = useState<number>(0);
+  const TOTAL_QUESTION_NUM = 10;
 
-  const { isPending, isError, data, error } = useQuery({
-    queryKey: ["questions", company, job],
-    queryFn: () => fetchInterviewQuestions(company, job),
-  });
+  // const { isPending, isError, data, error } = useQuery({
+  //   queryKey: ["questions", company, job],
+  //   queryFn: () => fetchInterviewQuestions(company, job),
+  // });
 
   return (
     <div className="p-3 h-full bg-white">
-      {data ? (
-        <InterviewContainer
-          question={data.data[questionNum]?.question}
-          qNum={questionNum}
-          totalQNum={data.data.length}
-          setQuestionNum={setQuestionNum}
-        />
-      ) : (
-        <div className="flex justify-center items-center h-full">
-          <MoonLoader />
-        </div>
-      )}
+      <InterviewContainer
+        // question={data.data[questionNum]?.question}
+        qNum={questionNum}
+        totalQNum={TOTAL_QUESTION_NUM}
+        setQuestionNum={setQuestionNum}
+      />
     </div>
   );
 };
