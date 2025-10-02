@@ -23,7 +23,7 @@ const Page = () => {
           <>
             <motion.div
               key="backdrop"
-              className="fixed inset-0 bg-black z-[999]"
+              className="fixed inset-0 bg-black z-[9]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.5 }}
               exit={{ opacity: 0 }}
@@ -35,8 +35,8 @@ const Page = () => {
               className="fixed top-1/2 left-1/2 
     -translate-x-1/2 -translate-y-1/2
     bg-white rounded-2xl shadow-xl
-    w-[80%] sm:w-full h-[17rem] max-w-md p-4
-    z-[1000]"
+    w-[80%] sm:w-full h-[17rem] max-w-md
+    z-[10]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

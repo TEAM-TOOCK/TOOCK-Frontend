@@ -7,19 +7,17 @@ import Button from "@/app/ui/Button";
 import { useAudioRecorder } from "@/utils/useAudioRecorder";
 import { useInterviewDataStore } from "@/stores/interviewData.store";
 import { useRouter } from "next/navigation";
-import { sendInterviewData } from "@/app/api/interview/sendInterviewData";
 import { useMutation } from "@tanstack/react-query";
 import { MoonLoader } from "react-spinners";
 import { useInterviewSessionStore } from "@/stores/interviewSession.store";
-import { InterviewQuestion } from "@/app/api/interview/fetchInterviewQuestions";
+import { InterviewQuestion, sendInterviewData } from "@/app/api/interview/fetchInterviewQuestions";
 
 interface Props {
   qNum: number;
-  totalQNum: number;
   setQuestionNum: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const InterviewContainer = ({ qNum, totalQNum, setQuestionNum }: Props) => {
+const InterviewContainer = ({ qNum, setQuestionNum }: Props) => {
   const router = useRouter();
   const { isRecording, start, stop, reset, audioURL, audioBlob } = useAudioRecorder();
   // global state
@@ -50,9 +48,11 @@ const InterviewContainer = ({ qNum, totalQNum, setQuestionNum }: Props) => {
     sendResponseMutation.mutate(undefined, {
       onSuccess: (data: InterviewQuestion | undefined) => {
         if (data) {
+          if (data?.finished) {
+            router.push("/interview-result?mode=result");
+          }
           setQuestionNum((prev) => prev++);
           setQuestion(data.questionText);
-          if (++qNum === totalQNum) router.push("/interview-result?mode=result");
         }
       },
     });
