@@ -1,8 +1,17 @@
 import { ApiResponse, client } from "../client";
 
-export interface InterviewQuestion {
+export interface InitialInterviewQuestion {
   interviewSessionId: number;
   questionText: string;
+}
+
+export interface InterviewQuestion {
+  questionText: string;
+  finished: boolean;
+}
+
+export interface InitialInterviewQuestionApiResponse extends ApiResponse {
+  data: InitialInterviewQuestion;
 }
 
 export interface InterviewQuestionApiResponse extends ApiResponse {
@@ -14,7 +23,7 @@ export type Field = (typeof FIELD)[number];
 
 export const initiateInterview = async (company: string, field: Field, job: string) => {
   try {
-    const response = await client.post("interviews/start").json<InterviewQuestionApiResponse>();
+    const response = await client.post("interviews/start").json<InitialInterviewQuestionApiResponse>();
     return response.data;
   } catch (error) {
     throw new Error("[initiate interview error]");
