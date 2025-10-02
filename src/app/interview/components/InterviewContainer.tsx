@@ -7,51 +7,65 @@ import Button from "@/app/ui/Button";
 import { useAudioRecorder } from "@/utils/useAudioRecorder";
 import { useInterviewDataStore } from "@/stores/interviewData.store";
 import { useRouter } from "next/navigation";
-import { sendInterviewData } from "@/app/api/interview/sendInterviewData";
 import { useMutation } from "@tanstack/react-query";
 import { MoonLoader } from "react-spinners";
+import { useInterviewSessionStore } from "@/stores/interviewSession.store";
+import { InterviewQuestion, sendInterviewData } from "@/app/api/interview/fetchInterviewQuestions";
 
 interface Props {
-  question: string;
   qNum: number;
-  totalQNum: number;
   setQuestionNum: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const InterviewContainer = ({ question, qNum, totalQNum, setQuestionNum }: Props) => {
-  // const { reset } = useAudioRecorder();
-  // const answerResetBtnHandler = () => {
-  //   reset();
-  // };
+const InterviewContainer = ({ qNum, setQuestionNum }: Props) => {
   const router = useRouter();
   const { isRecording, start, stop, reset, audioURL, audioBlob } = useAudioRecorder();
-  const addResponse = useInterviewDataStore((s) => s.addResponse);
-  const mutation = useMutation({
-    mutationFn: (data: Blob) => sendInterviewData(data),
+  // global state
+  const sessionId = useInterviewSessionStore((s) => s.sessionId);
+  const question = useInterviewSessionStore((s) => s.questionText);
+  const setQuestion = useInterviewSessionStore((s) => s.setQuestion);
+
+  const sendResponseMutation = useMutation({
+    mutationFn: () => {
+      if (sessionId === null) {
+        throw new Error("Session ID is not available");
+      }
+      return sendInterviewData(sessionId, audioBlob as Blob);
+    },
   });
 
   const nextBtnHandler = async () => {
-    if (++qNum === totalQNum) {
-      addResponse({ blob: audioBlob as Blob, url: audioURL as string });
-      // await sendInterviewData(audioBlob as Blob);
-      mutation.mutate(audioBlob as Blob, {
-        onSuccess: () => router.push("/interview-result?mode=result"),
-      });
-    } else {
-      setQuestionNum((prev) => prev + 1);
-      if (audioBlob && audioURL) addResponse({ blob: audioBlob, url: audioURL });
-      reset();
-    }
+    // if (++qNum === totalQNum) {
+    //   addResponse({ blob: audioBlob as Blob, url: audioURL as string });
+    //   mutation.mutate(audioBlob as Blob, {
+    //     onSuccess: () => router.push("/interview-result?mode=result"),
+    //   });
+    // } else {
+    //   setQuestionNum((prev) => prev + 1);
+    //   if (audioBlob && audioURL) addResponse({ blob: audioBlob, url: audioURL });
+    //   reset();
+    // }
+    sendResponseMutation.mutate(undefined, {
+      onSuccess: (data: InterviewQuestion | undefined) => {
+        if (data) {
+          if (data?.finished) {
+            router.push("/interview-result?mode=result");
+          }
+          setQuestionNum((prev) => prev++);
+          setQuestion(data.questionText);
+        }
+      },
+    });
   };
   return (
     <>
-      {mutation.isPending ? (
+      {sendResponseMutation.isPending ? (
         <div className="flex items-center justify-center w-full h-[30rem]">
           <MoonLoader />
         </div>
       ) : (
         <div className="flex flex-col gap-3 w-full h-[30rem]">
-          <QuestionBox question={question} qNum={qNum} />
+          <QuestionBox question={question as string} qNum={qNum} />
           <AnswerBox key={`q-${qNum}`} isRecording={isRecording} start={start} stop={stop} audioURL={audioURL} />
           <div className="flex flex-row items-center justify-end">
             <div className="flex flex-row gap-3">

@@ -21,21 +21,26 @@ interface InterviewSetting {
 const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [interviewSettings, setInterviewSettings] = useState<InterviewSetting[]>(INTERVIEW_SETTING_CONFIG);
   const [companyList, setCompanyList] = useState<string[]>([]);
+  const [fieldList, setFieldList] = useState<string[]>([]);
   const [jobList, setJobList] = useState<string[]>([]);
 
   // 전역 상태/액션
   const selectedCompany = useInterviewStore((s) => s.selectedCompany);
+  const selectedField = useInterviewStore((s) => s.selectedField);
   const selectedJob = useInterviewStore((s) => s.selectedJob);
   const setSelectedCompany = useInterviewStore((s) => s.setSelectedCompany);
+  const setSelectedField = useInterviewStore((s) => s.setSelectedField);
   const setSelectedJob = useInterviewStore((s) => s.setSelectedJob);
 
   useEffect(() => {
     fetchCompanyAndJobList().then((res) => {
       if (res === null) {
         setCompanyList([]);
+        setFieldList([]);
         setJobList([]);
       } else {
         setCompanyList(res.data.company);
+        setFieldList(res.data.field);
         setJobList(res.data.job);
       }
     });
@@ -52,13 +57,20 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
             dataSetter: setSelectedCompany,
           };
         case 1:
+          return {
+            ...v,
+            dataList: fieldList,
+            value: selectedField as string,
+            dataSetter: setSelectedField as React.Dispatch<React.SetStateAction<string>>,
+          };
+        case 2:
           return { ...v, dataList: jobList, value: selectedJob, dataSetter: setSelectedJob };
         default:
           return v;
       }
     });
     setInterviewSettings(updatedSettings);
-  }, [companyList, jobList, selectedCompany, selectedJob]);
+  }, [companyList, fieldList, jobList, selectedCompany, selectedField, selectedJob]);
 
   const clickStartInterviewHandler = () => {
     if (!selectedCompany || !selectedJob) {
@@ -76,7 +88,7 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
     setIsModal(true);
   };
   return (
-    <div className="flex flex-col justify-between gap-5 w-full h-auto rounded-md p-5 bg-blue-1 drop-shadow-xl text-blue-950">
+    <div className="flex flex-col justify-between gap-8 w-full h-auto rounded-md p-5 bg-blue-1 drop-shadow-xl text-blue-950">
       <div className="flex flex-col gap-1">
         <div className="text-xl font-semibold">면접 설정</div>
         <div>
@@ -85,9 +97,9 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        {interviewSettings.map((v, idx) => {
+        {interviewSettings.map((v, _) => {
           return (
-            <div key={v.id} className="flex flex-col gap-1 p-3 rounded-md">
+            <div key={v.id} className="flex flex-col gap-1  rounded-md">
               <div className="font-semibold">{v.label}</div>
               {interviewSettings && (
                 <Dropdown

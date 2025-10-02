@@ -2,6 +2,7 @@ import { ApiResponse, client } from "../client";
 
 interface CompanyAndJob {
   company: string[];
+  field: string[];
   job: string[];
 }
 
