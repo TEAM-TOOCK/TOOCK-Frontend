@@ -2,9 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import InterviewContainer from "./components/InterviewContainer";
-import { useQuery } from "@tanstack/react-query";
 import { useInterviewStore } from "@/stores/interview.store";
-import MoonLoader from "react-spinners/MoonLoader";
 
 const Page = () => {
   const company = useInterviewStore((s) => s.selectedCompany);

@@ -33,7 +33,6 @@ export const useInterviewSessionStore = create<InterviewSessionState>()(
       name: "interview-session", // sessionStorage 키
       version: 1,
       storage: createJSONStorage(() => sessionStorage),
-      // 필요시 migrate 로직 추가 가능
     }
   )
 );

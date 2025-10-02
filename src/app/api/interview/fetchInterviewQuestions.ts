@@ -26,6 +26,7 @@ export const initiateInterview = async (company: string, field: Field, job: stri
     const response = await client.post("interviews/start").json<InitialInterviewQuestionApiResponse>();
     return response.data;
   } catch (error) {
+    console.error(error);
     throw new Error("[initiate interview error]");
   }
 };

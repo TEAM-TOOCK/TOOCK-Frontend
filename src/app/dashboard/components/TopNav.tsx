@@ -18,26 +18,26 @@ const TopNav = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userName = useUserStore((s) => s.name);
 
-  const loginMutation = useMutation({
-    mutationKey: ["login"],
-    mutationFn: initiateSocialLogin,
-    onSuccess: async (result: loginData) => {
-      const { accessToken, memberId, name, email } = result;
+  // const loginMutation = useMutation({
+  //   mutationKey: ["login"],
+  //   mutationFn: initiateSocialLogin,
+  //   onSuccess: async (result: loginData) => {
+  //     const { accessToken, memberId, name, email } = result;
 
-      sessionStorage.setItem("accessToken", accessToken);
-      setIsLoggedIn(true);
+  //     sessionStorage.setItem("accessToken", accessToken);
+  //     setIsLoggedIn(true);
 
-      // 로그인 응답에 유저 데이터가 있으면 스토어와 캐시를 즉시 갱신
-      useUserStore.getState().setUserProfile({
-        memberId: memberId,
-        name: name,
-        email: email,
-      });
-    },
-    onError: () => {
-      alert("로그인에 실패했습니다. 잠시 후 다시 시도해주세요.");
-    },
-  });
+  //     // 로그인 응답에 유저 데이터가 있으면 스토어와 캐시를 즉시 갱신
+  //     useUserStore.getState().setUserProfile({
+  //       memberId: memberId,
+  //       name: name,
+  //       email: email,
+  //     });
+  //   },
+  //   onError: () => {
+  //     alert("로그인에 실패했습니다. 잠시 후 다시 시도해주세요.");
+  //   },
+  // });
 
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
@@ -62,7 +62,8 @@ const TopNav = () => {
   // });
 
   const clickLoginHandler = async () => {
-    if (!loginMutation.isPending) loginMutation.mutate();
+    window.location.href = "https://toock.store/oauth2/authorization/google";
+    // if (!loginMutation.isPending) loginMutation.mutate();
   };
   return (
     <div className="flex justify-center items-center w-full h-17 shadow-md px-3 sm:px-0 bg-white">
@@ -70,12 +71,8 @@ const TopNav = () => {
         <div className="flex flex-row">
           <Logo className="w-16 h-16 text-blue-950" />
           <div className="flex flex-col justify-center">
-            <div className="hidden sm:block bg-gradient-to-r text-blue-950 text-lg font-bold">
-              AI Interview Service
-            </div>
-            <div className="hidden sm:block text-sm font-medium text-gray-2">
-              지원자 {userName}님, 환영합니다!
-            </div>
+            <div className="hidden sm:block bg-gradient-to-r text-blue-950 text-lg font-bold">AI Interview Service</div>
+            <div className="hidden sm:block text-sm font-medium text-gray-2">지원자 {userName}님, 환영합니다!</div>
           </div>
         </div>
         <div className="flex flex-row gap-3">
