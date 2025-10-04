@@ -5,7 +5,7 @@ import Logo from "@/assets/logo.svg";
 import Play from "@/assets/play.svg";
 import Logout from "@/assets/logout.svg";
 import Google from "@/assets/google.svg";
-import { useState, useEffect } from "react";
+import { SetStateAction, Dispatch } from "react";
 
 import { userName } from "../mockData";
 import { useRouter } from "next/navigation";
@@ -13,9 +13,13 @@ import { initiateSocialLogin, loginData } from "@/app/api/dashboard/initiateSoci
 import { useUserStore } from "@/stores/user.store";
 import { useMutation } from "@tanstack/react-query";
 
-const TopNav = () => {
+interface Props {
+  isLoggedIn: boolean;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+}
+
+const TopNav = ({ isLoggedIn, setIsLoggedIn }: Props) => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userName = useUserStore((s) => s.name);
 
   // const loginMutation = useMutation({
@@ -38,13 +42,6 @@ const TopNav = () => {
   //     alert("로그인에 실패했습니다. 잠시 후 다시 시도해주세요.");
   //   },
   // });
-
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
 
   const clickInterviewHandler = () => {
     router.push("/interview-setup");

@@ -23,7 +23,12 @@ export type Field = (typeof FIELD)[number];
 
 export const initiateInterview = async (company: string, field: Field, job: string) => {
   try {
-    const response = await client.post("interviews/start").json<InitialInterviewQuestionApiResponse>();
+    const data = {
+      companyName: company,
+      fieldCategory: field,
+      field: job,
+    };
+    const response = await client.post("interviews/start", { json: data }).json<InitialInterviewQuestionApiResponse>();
     return response.data;
   } catch (error) {
     console.error(error);
