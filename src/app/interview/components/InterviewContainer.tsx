@@ -39,7 +39,7 @@ const InterviewContainer = ({ qNum, setQuestionNum }: Props) => {
       onSuccess: (data: InterviewQuestion | undefined) => {
         if (data) {
           if (data?.finished) {
-            router.push("/interview-result?mode=result");
+            router.push("/interview-result");
           }
           setQuestionNum((prev) => (prev += 1));
           setQuestion(data.questionText);

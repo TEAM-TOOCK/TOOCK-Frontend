@@ -13,43 +13,50 @@ import QAndAContents from "./QAndAContents";
 import ImprovementsProposalContents from "./ImprovementsProposalContents";
 import { useSearchParams } from "next/navigation";
 import { fetchInterviewRecordDetail } from "@/app/api/dashboard/fetchInterviewRecordDetail";
+import { useInterviewSessionStore } from "@/stores/interviewSession.store";
+import { detailEvaluation, improvementsProposal } from "../utils/resultDataParser";
 
 const InterviewResultContainer = () => {
   const company = useInterviewStore((s) => s.selectedCompany);
   const job = useInterviewStore((s) => s.selectedJob);
-  const search = useSearchParams();
-  const mode = search.get("mode") as "result" | "record";
-  let recordId = null;
-  if (mode === "record") {
-    recordId = Number(search.get("id"));
-  }
+  const sessionId = useInterviewSessionStore((s) => s.sessionId);
+
+  // const search = useSearchParams();
+  // const mode = search.get("mode") as "result" | "record";
+  // let recordId = null;
+  // if (mode === "record") {
+  //   recordId = Number(search.get("id"));
+  // }
 
   // 경우에 따라 면접 결과를 불러오거나, 아니면 저장된 기존 면접 데이터를 가져옵니다
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["interview-results", mode, company, job],
-    queryFn: () =>
-      mode === "record" ? fetchInterviewRecordDetail(recordId as number) : fetchInterviewResults(company, job),
-    enabled: !!company && !!job && !!mode, // 값 준비되면 호출
+    queryKey: ["interview-results", sessionId],
+    queryFn: () => {
+      if (sessionId) {
+        return fetchInterviewResults(sessionId);
+      }
+    },
+    enabled: !!sessionId, // 값 준비되면 호출
   });
 
   const getContentOfColumn1 = (item: (typeof COLUMN1)[number]) => {
     if (item.title === "종합 점수" && data) {
       return <TotalScoreContentsComp data={data.totalScore} />;
     } else if (item.title === "세부 평가" && data) {
-      return <DetailScoreContents data={data.detailScore} />;
+      return <DetailScoreContents data={detailEvaluation(data)} />;
     } else if (item.title === "역량 분포" && data) {
-      return <AbilityDistributionContents data={data.detailScore} />;
+      return <AbilityDistributionContents data={detailEvaluation(data)} />;
     }
     return null;
   };
 
   const getContentOfColumn2 = (item: (typeof COLUMN2)[number]) => {
     if (item.title === "AI 피드백" && data) {
-      return <div>{data.AIfeedback}</div>;
+      return <div>{data.aiFeedback}</div>;
     } else if (item.title === "질문 및 답변 기록" && data) {
-      return <QAndAContents data={data.questionAndAnswer} />;
+      return <QAndAContents data={data.qaRecords} />;
     } else if (item.title === "개선 제안" && data) {
-      return <ImprovementsProposalContents data={data.improvementProposal} />;
+      return <ImprovementsProposalContents data={improvementsProposal(data)} />;
     }
     return null;
   };

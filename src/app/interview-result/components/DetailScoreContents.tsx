@@ -1,7 +1,13 @@
-import { InterviewDetailScore } from "@/app/api/interview/fetchInterviewResults";
 import ProgressBar from "@/app/ui/ProgressBar/ProgressBar";
 import React from "react";
 import { getAbilName } from "../utils/interviewUtils";
+
+export interface InterviewDetailScore {
+  technicalExpertiseScore: number;
+  softSkillsScore: number;
+  problemSolvingScore: number;
+  growthPotentialScore: number;
+}
 
 const DetailScoreContents = ({ data }: { data: InterviewDetailScore }) => {
   return (
@@ -13,12 +19,7 @@ const DetailScoreContents = ({ data }: { data: InterviewDetailScore }) => {
               <div className="font-bold">{getAbilName(v[0])}</div>
               <div className="font-semibold">{v[1]}/10</div>
             </div>
-            <ProgressBar
-              bgColor={"white"}
-              color={"#3b82f6"}
-              percentage={v[1] * 10}
-              height={"1rem"}
-            />
+            <ProgressBar bgColor={"white"} color={"#3b82f6"} percentage={v[1] * 10} height={"1rem"} />
           </div>
         );
       })}

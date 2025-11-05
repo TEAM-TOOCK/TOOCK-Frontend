@@ -1,14 +1,7 @@
-import { InterviewDetailScore } from "@/app/api/interview/fetchInterviewResults";
 import React from "react";
 import { getAbilName } from "../utils/interviewUtils";
-import {
-  PolarAngleAxis,
-  PolarGrid,
-  PolarRadiusAxis,
-  Radar,
-  RadarChart,
-  ResponsiveContainer,
-} from "recharts";
+import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer } from "recharts";
+import { InterviewDetailScore } from "./DetailScoreContents";
 
 const AbilityDistributionContents = ({ data }: { data: InterviewDetailScore }) => {
   const dataFormatter = (src: InterviewDetailScore) => {
