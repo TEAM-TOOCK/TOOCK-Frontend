@@ -35,16 +35,6 @@ const InterviewContainer = ({ qNum, setQuestionNum }: Props) => {
   });
 
   const nextBtnHandler = async () => {
-    // if (++qNum === totalQNum) {
-    //   addResponse({ blob: audioBlob as Blob, url: audioURL as string });
-    //   mutation.mutate(audioBlob as Blob, {
-    //     onSuccess: () => router.push("/interview-result?mode=result"),
-    //   });
-    // } else {
-    //   setQuestionNum((prev) => prev + 1);
-    //   if (audioBlob && audioURL) addResponse({ blob: audioBlob, url: audioURL });
-    //   reset();
-    // }
     sendResponseMutation.mutate(undefined, {
       onSuccess: (data: InterviewQuestion | undefined) => {
         if (data) {
