@@ -10,7 +10,7 @@ const QuestionBox = ({ question, qNum }: { question: string; qNum: number }) => 
   };
 
   return (
-    <div className="flex flex-col justify-between w-full h-[6rem] bg-slate-400 rounded-md p-3">
+    <div className="flex flex-col justify-between w-full h-auto bg-slate-400 rounded-md p-3 gap-1">
       <div className="flex flex-row justify-between items-center">
         <div className="text-xl font-semibold">질문 {qNum + 1}</div>
         <Button

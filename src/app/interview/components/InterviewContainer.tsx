@@ -51,7 +51,7 @@ const InterviewContainer = ({ qNum, setQuestionNum }: Props) => {
           if (data?.finished) {
             router.push("/interview-result?mode=result");
           }
-          setQuestionNum((prev) => prev++);
+          setQuestionNum((prev) => (prev += 1));
           setQuestion(data.questionText);
         }
       },

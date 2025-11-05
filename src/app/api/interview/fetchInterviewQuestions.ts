@@ -1,10 +1,16 @@
 import { ApiResponse, client } from "../client";
 
+/**
+ * 첫 면접질문 형식
+ */
 export interface InitialInterviewQuestion {
   interviewSessionId: number;
   questionText: string;
 }
 
+/**
+ * 처음 이외의 면접 질문 형식
+ */
 export interface InterviewQuestion {
   questionText: string;
   finished: boolean;

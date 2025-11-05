@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
 import {
   INTERVIEW_COMPANY_LIST,
   INTERVIEW_FIELD_CATEGORY,
@@ -67,7 +67,7 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
             ...v,
             dataList: INTERVIEW_FIELD_CATEGORY,
             value: selectedField as string,
-            dataSetter: setSelectedField as React.Dispatch<React.SetStateAction<string>>,
+            dataSetter: setSelectedField as Dispatch<SetStateAction<string>>,
           };
         case 2:
           return { ...v, dataList: INTERVIEW_FIELD_LIST, value: selectedJob, dataSetter: setSelectedJob };
