@@ -24,10 +24,7 @@ export interface InterviewQuestionApiResponse extends ApiResponse {
   data: InterviewQuestion;
 }
 
-const FIELD = ["개발", "데이터", "연구개발", ""] as const;
-export type Field = (typeof FIELD)[number];
-
-export const initiateInterview = async (company: string, field: Field, job: string) => {
+export const initiateInterview = async (company: string, field: string, job: string) => {
   try {
     const data = {
       companyName: company,

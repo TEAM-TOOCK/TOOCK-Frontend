@@ -1,27 +1,33 @@
-import { Field } from "@/app/api/interview/fetchInterviewQuestions";
+import { InterviewOptionData } from "@/app/interview-setup/constants/interviewSetting.constants";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 type InterviewState = {
-  selectedCompany: string;
-  selectedField: Field;
-  selectedJob: string;
-  setSelectedCompany: (value: string) => void;
-  setSelectedField: (value: Field) => void;
-  setSelectedJob: (value: string) => void;
+  selectedCompany: InterviewOptionData;
+  selectedField: InterviewOptionData;
+  selectedJob: InterviewOptionData;
+  setSelectedCompany: (value: InterviewOptionData) => void;
+  setSelectedField: (value: InterviewOptionData) => void;
+  setSelectedJob: (value: InterviewOptionData) => void;
   reset: () => void;
+};
+
+const initialInterviewOption = {
+  id: -1,
+  label: "",
+  value: "",
 };
 
 export const useInterviewStore = create<InterviewState>()(
   persist(
     (set) => ({
-      selectedCompany: "",
-      selectedField: "",
-      selectedJob: "",
+      selectedCompany: initialInterviewOption,
+      selectedField: initialInterviewOption,
+      selectedJob: initialInterviewOption,
       setSelectedCompany: (value) => set({ selectedCompany: value }),
       setSelectedField: (value) => set({ selectedField: value }),
       setSelectedJob: (value) => set({ selectedJob: value }),
-      reset: () => set({ selectedCompany: "", selectedJob: "" }),
+      reset: () => set({ selectedCompany: initialInterviewOption, selectedJob: initialInterviewOption }),
     }),
     {
       name: "interview-store",
