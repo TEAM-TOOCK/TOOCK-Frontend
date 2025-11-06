@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { MoonLoader } from "react-spinners";
 import { useInterviewSessionStore } from "@/stores/interviewSession.store";
 import { InterviewQuestion, sendInterviewData } from "@/app/api/interview/fetchInterviewQuestions";
+import { analyzeInterview } from "@/app/api/interview/fetchInterviewResults";
 
 interface Props {
   qNum: number;
@@ -35,24 +36,15 @@ const InterviewContainer = ({ qNum, setQuestionNum }: Props) => {
   });
 
   const nextBtnHandler = async () => {
-    // if (++qNum === totalQNum) {
-    //   addResponse({ blob: audioBlob as Blob, url: audioURL as string });
-    //   mutation.mutate(audioBlob as Blob, {
-    //     onSuccess: () => router.push("/interview-result?mode=result"),
-    //   });
-    // } else {
-    //   setQuestionNum((prev) => prev + 1);
-    //   if (audioBlob && audioURL) addResponse({ blob: audioBlob, url: audioURL });
-    //   reset();
-    // }
     sendResponseMutation.mutate(undefined, {
       onSuccess: (data: InterviewQuestion | undefined) => {
-        if (data) {
-          if (data?.finished) {
-            router.push("/interview-result?mode=result");
-          }
-          setQuestionNum((prev) => prev++);
-          setQuestion(data.questionText);
+        if (data?.finished && sessionId) {
+          analyzeInterview(sessionId).then((isAnalyzed) => {
+            if (isAnalyzed) router.push("/interview-result");
+          });
+        } else {
+          setQuestionNum((prev) => (prev += 1));
+          setQuestion(data?.questionText as string);
         }
       },
     });

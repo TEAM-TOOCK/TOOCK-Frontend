@@ -7,8 +7,8 @@ export const handlers = [
       code: 200,
       message: "회사 리스트 조회 성공",
       data: {
-        company: ["삼성 SDS", "LINE PLUS", "NAVER", "KAKAO"],
-        field: ["개발", "연구개발", "데이터"],
+        company: ["삼성 SDS", "LINE PLUS", "NAVER", "(주)카카오"],
+        field: ["DEVELOPMENT", "RND", "DATA"],
         job: ["FRONTEND", "BACKEND", "DEVOPS"],
       },
     });

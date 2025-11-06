@@ -1,7 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { INTERVIEW_SETTING_CONFIG } from "../constants/interviewSetting.constants";
+import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
+import {
+  INTERVIEW_COMPANY_LIST,
+  INTERVIEW_FIELD_CATEGORY,
+  INTERVIEW_FIELD_LIST,
+  INTERVIEW_SETTING_CONFIG,
+  InterviewOptionData,
+} from "../constants/interviewSetting.constants";
 import Dropdown from "@/app/ui/Dropdown/Dropdown";
 import Button from "@/app/ui/Button";
 import Play from "@/assets/play.svg";
@@ -13,16 +19,16 @@ import { toast } from "react-toastify";
 interface InterviewSetting {
   id: number;
   label: string;
-  dataList?: string[];
+  dataList?: InterviewOptionData[];
   value?: string;
   dataSetter?: (value: string) => void;
 }
 
 const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [interviewSettings, setInterviewSettings] = useState<InterviewSetting[]>(INTERVIEW_SETTING_CONFIG);
-  const [companyList, setCompanyList] = useState<string[]>([]);
-  const [fieldList, setFieldList] = useState<string[]>([]);
-  const [jobList, setJobList] = useState<string[]>([]);
+  // const [companyList, setCompanyList] = useState<string[]>([]);
+  // const [fieldList, setFieldList] = useState<string[]>([]);
+  // const [jobList, setJobList] = useState<string[]>([]);
 
   // 전역 상태/액션
   const selectedCompany = useInterviewStore((s) => s.selectedCompany);
@@ -32,19 +38,19 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
   const setSelectedField = useInterviewStore((s) => s.setSelectedField);
   const setSelectedJob = useInterviewStore((s) => s.setSelectedJob);
 
-  useEffect(() => {
-    fetchCompanyAndJobList().then((res) => {
-      if (res === null) {
-        setCompanyList([]);
-        setFieldList([]);
-        setJobList([]);
-      } else {
-        setCompanyList(res.data.company);
-        setFieldList(res.data.field);
-        setJobList(res.data.job);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   fetchCompanyAndJobList().then((res) => {
+  //     if (res === null) {
+  //       setCompanyList([]);
+  //       setFieldList([]);
+  //       setJobList([]);
+  //     } else {
+  //       setCompanyList(res.data.company);
+  //       setFieldList(res.data.field);
+  //       setJobList(res.data.job);
+  //     }
+  //   });
+  // }, []);
 
   useEffect(() => {
     const updatedSettings = INTERVIEW_SETTING_CONFIG.map((v, _) => {
@@ -52,25 +58,25 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
         case 0:
           return {
             ...v,
-            dataList: companyList,
+            dataList: INTERVIEW_COMPANY_LIST,
             value: selectedCompany,
             dataSetter: setSelectedCompany,
           };
         case 1:
           return {
             ...v,
-            dataList: fieldList,
+            dataList: INTERVIEW_FIELD_CATEGORY,
             value: selectedField as string,
-            dataSetter: setSelectedField as React.Dispatch<React.SetStateAction<string>>,
+            dataSetter: setSelectedField as Dispatch<SetStateAction<string>>,
           };
         case 2:
-          return { ...v, dataList: jobList, value: selectedJob, dataSetter: setSelectedJob };
+          return { ...v, dataList: INTERVIEW_FIELD_LIST, value: selectedJob, dataSetter: setSelectedJob };
         default:
           return v;
       }
     });
     setInterviewSettings(updatedSettings);
-  }, [companyList, fieldList, jobList, selectedCompany, selectedField, selectedJob]);
+  }, [selectedCompany, selectedField, selectedJob]);
 
   const clickStartInterviewHandler = () => {
     if (!selectedCompany || !selectedJob) {
@@ -103,7 +109,7 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
               <div className="font-semibold">{v.label}</div>
               {interviewSettings && (
                 <Dropdown
-                  dataList={v.dataList ?? []}
+                  dataList={v.dataList?.map((value) => value.label) ?? []}
                   onChange={v.dataSetter ?? (() => {})}
                   value={v.value ?? ""}
                   bgColor="white"

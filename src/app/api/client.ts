@@ -9,6 +9,7 @@ export interface ApiResponse<T = unknown> {
 
 export const client = ky.create({
   prefixUrl: process.env.NEXT_PUBLIC_API_URL,
+  timeout: 60000,
   hooks: {
     beforeRequest: [
       (request) => {
@@ -16,11 +17,11 @@ export const client = ky.create({
         if (accessToken) request.headers.set("Authorization", `Bearer ${accessToken}`);
       },
     ],
-    afterResponse: [
-      async (request, options, response) => {
-        const apiResponse = (await response.clone().json()) as ApiResponse;
-      },
-    ],
+    // afterResponse: [
+    //   async (request, options, response) => {
+    //     const apiResponse = (await response.clone().json()) as ApiResponse;
+    //   },
+    // ],
   },
   retry: {
     limit: 2,

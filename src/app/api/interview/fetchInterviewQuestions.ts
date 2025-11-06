@@ -1,10 +1,16 @@
 import { ApiResponse, client } from "../client";
 
+/**
+ * 첫 면접질문 형식
+ */
 export interface InitialInterviewQuestion {
   interviewSessionId: number;
   questionText: string;
 }
 
+/**
+ * 처음 이외의 면접 질문 형식
+ */
 export interface InterviewQuestion {
   questionText: string;
   finished: boolean;
@@ -23,26 +29,18 @@ export type Field = (typeof FIELD)[number];
 
 export const initiateInterview = async (company: string, field: Field, job: string) => {
   try {
-    const response = await client.post("interviews/start").json<InitialInterviewQuestionApiResponse>();
+    const data = {
+      companyName: company,
+      fieldCategory: field,
+      field: job,
+    };
+    const response = await client.post("interviews/start", { json: data }).json<InitialInterviewQuestionApiResponse>();
     return response.data;
   } catch (error) {
     console.error(error);
     throw new Error("[initiate interview error]");
   }
 };
-
-// export const fetchInterviewQuestions = async (company: string, job: string) => {
-//   try {
-//     const response = await client
-//       .get(`interview-questions?company=${company}&job=${job}`)
-//       .json<InterviewQuestionApiResponse>();
-//     console.log(response);
-//     return response.data;
-//   } catch (error) {
-//     console.error("[Interview Question Fetch Error]", error);
-//     return null;
-//   }
-// };
 
 export const sendInterviewData = async (interviewSessionId: number, audioFile: Blob) => {
   if (!audioFile) {

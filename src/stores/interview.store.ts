@@ -25,7 +25,7 @@ export const useInterviewStore = create<InterviewState>()(
     }),
     {
       name: "interview-store",
-      storage: createJSONStorage(() => localStorage),
+      // storage: createJSONStorage(() => localStorage),
     }
   )
 );

@@ -1,45 +1,55 @@
 import { ApiResponse, client } from "../client";
 
-export type InterviewDetailScore = {
-  technic: number;
-  communication: number;
-  logic: number;
-  problemSolving: number;
-};
-
 export type InterviewQandA = {
-  id: number;
-  question: string;
-  answer: string;
-};
-
-export type InterviewImprovementProposalData = {
-  id: number;
-  text: string;
-};
-
-export type InterviewImprovementProposal = {
-  strength: InterviewImprovementProposalData[];
-  weekness: InterviewImprovementProposalData[];
+  interviewQAId: number;
+  questionOrder: number;
+  followUpOrder: number;
+  questionText: string;
+  answerText: string;
+  s3Url: string;
+  evaluation: string;
+  score: number;
+  fieldCategory: string;
 };
 
 export interface InterviewResult {
+  interviewAnalysisId: number;
+  interviewSessionId: number;
   totalScore: number;
-  detailScore: InterviewDetailScore;
-  AIfeedback: string;
-  questionAndAnswer: InterviewQandA[];
-  improvementProposal: InterviewImprovementProposal;
+  technicalExpertiseScore: number;
+  softSkillsScore: number;
+  problemSolvingScore: number;
+  growthPotentialScore: number;
+  aiFeedback: string;
+  qaRecords: InterviewQandA[];
+  strengths: string[];
+  improvements: string[];
 }
 
-export interface InterviewResultApiResponse extends ApiResponse {
-  data: InterviewResult;
+export interface InterviewAnalyze {
+  id: number;
+  interviewSessionId: number;
+  score: number;
+  technicalExpertiseScore: number;
+  softSkillsScore: number;
+  problemSolvingScore: number;
+  growthPotentialScore: number;
+  summary: string;
 }
 
-export const fetchInterviewResults = async (company: string, job: string) => {
+export const analyzeInterview = async (sessionId: number) => {
   try {
-    const response = await client
-      .get("interview-results?company=${company}&job=${job}")
-      .json<InterviewResultApiResponse>();
+    const response = await client.post(`interviews/analyze/${sessionId}`).json<ApiResponse<InterviewAnalyze>>();
+    return response.success;
+  } catch (error) {
+    console.error("[Interview Analyze Error]", error);
+    throw Error("[Interview Analyze Error]");
+  }
+};
+
+export const fetchInterviewResults = async (sessionId: number) => {
+  try {
+    const response = await client.get(`interviews/results/details/${sessionId}`).json<ApiResponse<InterviewResult>>();
     console.log(response);
     return response.data;
   } catch (error) {

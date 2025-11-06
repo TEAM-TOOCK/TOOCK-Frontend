@@ -1,16 +1,20 @@
-import { InterviewImprovementProposal } from "@/app/api/interview/fetchInterviewResults";
-import React, { useEffect } from "react";
+import React from "react";
 
-const ImprovementsProposalContents = ({ data }: { data: InterviewImprovementProposal }) => {
+interface ImprovementsProposal {
+  strengths: string[];
+  improvements: string[];
+}
+
+const ImprovementsProposalContents = ({ data }: { data: ImprovementsProposal }) => {
   return (
     <div className="flex flex-col gap-5 w-full">
       <div>
         <div className="font-semibold text-xl text-blue-600">강점</div>
         <ul className="list-disc list-inside">
-          {data.strength.map((v) => {
+          {data.strengths.map((v, index) => {
             return (
-              <li key={v.id} className="text-sm font-medium">
-                {v.text}
+              <li key={index} className="text-sm font-medium">
+                {v}
               </li>
             );
           })}
@@ -19,10 +23,10 @@ const ImprovementsProposalContents = ({ data }: { data: InterviewImprovementProp
       <div>
         <div className="font-semibold text-xl text-red-600">약점</div>
         <ul className="list-disc list-inside">
-          {data.weekness.map((v) => {
+          {data.improvements.map((v, index) => {
             return (
-              <li key={v.id} className="text-sm font-medium">
-                {v.text}
+              <li key={index} className="text-sm font-medium">
+                {v}
               </li>
             );
           })}
