@@ -6,18 +6,31 @@ import SearchBar from "./components/SearchBar";
 import RecordSection from "./components/RecordSection";
 import { useEffect, useState } from "react";
 import ToockPromo from "./components/ToockPromo";
+import { useUserStore } from "@/stores/user.store";
 
 const Page = () => {
   const [userInput, setUserInput] = useState("");
   const [selectedCompany, setSelectedCompany] = useState<string>("");
   const [selectedJob, setSelectedJob] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const setUserProfile = useUserStore((state) => state.setUserProfile);
 
   useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      setIsLoggedIn(true);
+      return;
+    }
     const params = new URLSearchParams(window.location.search);
-    const accessToken = params.get("accessToken");
-    if (accessToken) {
-      sessionStorage.setItem("accessToken", accessToken);
+    console.log(params);
+    if (params) {
+      const accessToken = params.get("accessToken");
+      localStorage.setItem("accessToken", accessToken as string);
+      setUserProfile({
+        memberId: Number(params.get("memberId")),
+        name: params.get("name") as string,
+        email: params.get("email") as string,
+      });
+
       window.history.replaceState({}, "", window.location.pathname);
       setIsLoggedIn(true);
     }

@@ -6,12 +6,8 @@ import Play from "@/assets/play.svg";
 import Logout from "@/assets/logout.svg";
 import Google from "@/assets/google.svg";
 import { SetStateAction, Dispatch } from "react";
-
-import { userName } from "../mockData";
 import { useRouter } from "next/navigation";
-import { initiateSocialLogin, loginData } from "@/app/api/dashboard/initiateSocialLogin";
 import { useUserStore } from "@/stores/user.store";
-import { useMutation } from "@tanstack/react-query";
 
 interface Props {
   isLoggedIn: boolean;
@@ -21,47 +17,21 @@ interface Props {
 const TopNav = ({ isLoggedIn, setIsLoggedIn }: Props) => {
   const router = useRouter();
   const userName = useUserStore((s) => s.name);
-
-  // const loginMutation = useMutation({
-  //   mutationKey: ["login"],
-  //   mutationFn: initiateSocialLogin,
-  //   onSuccess: async (result: loginData) => {
-  //     const { accessToken, memberId, name, email } = result;
-
-  //     sessionStorage.setItem("accessToken", accessToken);
-  //     setIsLoggedIn(true);
-
-  //     // 로그인 응답에 유저 데이터가 있으면 스토어와 캐시를 즉시 갱신
-  //     useUserStore.getState().setUserProfile({
-  //       memberId: memberId,
-  //       name: name,
-  //       email: email,
-  //     });
-  //   },
-  //   onError: () => {
-  //     alert("로그인에 실패했습니다. 잠시 후 다시 시도해주세요.");
-  //   },
-  // });
+  const resetProfile = useUserStore((s) => s.resetProfile);
 
   const clickInterviewHandler = () => {
     router.push("/interview-setup");
   };
   const clickLogoutHandler = () => {
-    sessionStorage.removeItem("accessToken");
+    localStorage.removeItem("accessToken");
+    resetProfile();
     setIsLoggedIn(false);
   };
 
-  // const { data, isPending, isError, error } = useQuery({
-  //   queryKey: ["interview-results", mode, company, job],
-  //   queryFn: () =>
-  //     mode === "record" ? fetchInterviewRecordDetail(recordId as number) : fetchInterviewResults(company, job),
-  //   enabled: !!company && !!job && !!mode, // 값 준비되면 호출
-  // });
-
   const clickLoginHandler = async () => {
     window.location.href = "https://toock.store/oauth2/authorization/google";
-    // if (!loginMutation.isPending) loginMutation.mutate();
   };
+
   return (
     <div className="flex justify-center items-center w-full h-17 shadow-md px-3 sm:px-0 bg-white">
       <div className="flex justify-between items-center sm:w-[70%] w-[100%]">
