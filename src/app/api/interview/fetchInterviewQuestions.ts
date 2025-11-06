@@ -42,19 +42,6 @@ export const initiateInterview = async (company: string, field: Field, job: stri
   }
 };
 
-// export const fetchInterviewQuestions = async (company: string, job: string) => {
-//   try {
-//     const response = await client
-//       .get(`interview-questions?company=${company}&job=${job}`)
-//       .json<InterviewQuestionApiResponse>();
-//     console.log(response);
-//     return response.data;
-//   } catch (error) {
-//     console.error("[Interview Question Fetch Error]", error);
-//     return null;
-//   }
-// };
-
 export const sendInterviewData = async (interviewSessionId: number, audioFile: Blob) => {
   if (!audioFile) {
     alert("업로드할 녹음이 없습니다.");

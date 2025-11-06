@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { MoonLoader } from "react-spinners";
 import { useInterviewSessionStore } from "@/stores/interviewSession.store";
 import { InterviewQuestion, sendInterviewData } from "@/app/api/interview/fetchInterviewQuestions";
+import { analyzeInterview } from "@/app/api/interview/fetchInterviewResults";
 
 interface Props {
   qNum: number;
@@ -37,12 +38,13 @@ const InterviewContainer = ({ qNum, setQuestionNum }: Props) => {
   const nextBtnHandler = async () => {
     sendResponseMutation.mutate(undefined, {
       onSuccess: (data: InterviewQuestion | undefined) => {
-        if (data) {
-          if (data?.finished) {
-            router.push("/interview-result");
-          }
+        if (data?.finished && sessionId) {
+          analyzeInterview(sessionId).then((isAnalyzed) => {
+            if (isAnalyzed) router.push("/interview-result");
+          });
+        } else {
           setQuestionNum((prev) => (prev += 1));
-          setQuestion(data.questionText);
+          setQuestion(data?.questionText as string);
         }
       },
     });
