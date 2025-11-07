@@ -15,7 +15,7 @@ const InterviewSettingModal = ({ setIsModal }: { setIsModal: React.Dispatch<Reac
   const router = useRouter();
 
   const { mutate, isPending, isError, data, error } = useMutation({
-    mutationFn: () => initiateInterview(company, field, job),
+    mutationFn: () => initiateInterview(company.value, field.value, job.value),
     onSuccess: (data: InitialInterviewQuestion) => {
       useInterviewSessionStore.getState().setSession({
         sessionId: data.interviewSessionId,
@@ -53,7 +53,7 @@ const InterviewSettingModal = ({ setIsModal }: { setIsModal: React.Dispatch<Reac
       <div>
         <div className="flex justify-center items-center text-2xl">면접 준비</div>
         <div className="flex justify-center items-center text-sm text-slate-400">
-          {company}-{job} 면접을 시작합니다!
+          {company.label}-{job.label} 면접을 시작합니다!
         </div>
       </div>
       <div>

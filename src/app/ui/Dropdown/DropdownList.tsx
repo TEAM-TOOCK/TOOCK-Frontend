@@ -2,16 +2,17 @@
 
 import React from "react";
 import clsx from "clsx";
+import { InterviewOptionData } from "@/app/interview-setup/constants/interviewSetting.constants";
 
 interface Props {
-  dataList: string[];
-  selectedItem: string;
-  setSelectedItem: (value: string) => void;
+  dataList: InterviewOptionData[];
+  selectedItem: InterviewOptionData | undefined;
+  setSelectedItem: (value: InterviewOptionData) => void;
   setClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DropdownList = ({ dataList, selectedItem, setSelectedItem, setClicked }: Props) => {
-  const itemClickHandler = (v: string) => {
+  const itemClickHandler = (v: InterviewOptionData) => {
     setSelectedItem(v);
     setClicked(false);
   };
@@ -36,10 +37,10 @@ const DropdownList = ({ dataList, selectedItem, setSelectedItem, setClicked }: P
             onClick={() => itemClickHandler(v)}
             className={clsx(
               "h-8 px-2 rounded-md w-full truncate text-center leading-8",
-              v === selectedItem ? "bg-slate-500 text-white" : ""
+              v.value === selectedItem?.value ? "bg-slate-500 text-white" : ""
             )}
           >
-            {v}
+            {v.label}
           </div>
         );
       })}

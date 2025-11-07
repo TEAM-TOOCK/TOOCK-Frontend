@@ -20,10 +20,11 @@ const Page = () => {
       setIsLoggedIn(true);
       return;
     }
+
     const params = new URLSearchParams(window.location.search);
-    console.log(params);
-    if (params) {
-      const accessToken = params.get("accessToken");
+    const accessToken = params.get("accessToken");
+
+    if (params && accessToken) {
       localStorage.setItem("accessToken", accessToken as string);
       setUserProfile({
         memberId: Number(params.get("memberId")),
@@ -41,24 +42,31 @@ const Page = () => {
       <TopNav isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <div className="flex flex-col justify-start gap-10 sm:gap-5 w-[100%] sm:w-[70%] my-5 p-3 sm:p-0 flex-1">
         <ToockPromo />
-        <StatSection />
-        <div className="flex flex-col gap-5">
-          <SearchBar
-            setUserInput={setUserInput}
-            setSelectedCompany={setSelectedCompany}
-            setSelectedJob={setSelectedJob}
-            selectedCompany={selectedCompany}
-            selectedJob={selectedJob}
-            bgColor={"white"}
-            color={"var(--color-blue-950)"}
-          />
-          <RecordSection
-            userInput={userInput}
-            selectedCompany={selectedCompany}
-            selectedJob={selectedJob}
-            setSelectedCompany={setSelectedCompany}
-            setSelectedJob={setSelectedJob}
-          />
+        <div className="flex flex-col gap-5 relative">
+          {!isLoggedIn && (
+            <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full bg-slate-500/50 backdrop-blur-sm rounded-md z-50 text-xl font-extrabold text-blue-2">
+              로그인 후 사용가능합니다
+            </div>
+          )}
+          <StatSection isLoggedIn={isLoggedIn} />
+          <div className="flex flex-col gap-5">
+            <SearchBar
+              setUserInput={setUserInput}
+              setSelectedCompany={setSelectedCompany}
+              setSelectedJob={setSelectedJob}
+              selectedCompany={selectedCompany}
+              selectedJob={selectedJob}
+              bgColor={"white"}
+              color={"var(--color-blue-950)"}
+            />
+            <RecordSection
+              userInput={userInput}
+              selectedCompany={selectedCompany}
+              selectedJob={selectedJob}
+              setSelectedCompany={setSelectedCompany}
+              setSelectedJob={setSelectedJob}
+            />
+          </div>
         </div>
       </div>
       <div className="flex items-center justify-center w-full h-[10rem] bg-slate-100 text-slate-500">

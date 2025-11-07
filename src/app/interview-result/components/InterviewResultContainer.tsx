@@ -11,8 +11,6 @@ import DetailScoreContents from "./DetailScoreContents";
 import AbilityDistributionContents from "./AbilityDistributionContents";
 import QAndAContents from "./QAndAContents";
 import ImprovementsProposalContents from "./ImprovementsProposalContents";
-import { useSearchParams } from "next/navigation";
-import { fetchInterviewRecordDetail } from "@/app/api/dashboard/fetchInterviewRecordDetail";
 import { useInterviewSessionStore } from "@/stores/interviewSession.store";
 import { detailEvaluation, improvementsProposal } from "../utils/resultDataParser";
 

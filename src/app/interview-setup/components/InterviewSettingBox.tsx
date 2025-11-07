@@ -20,16 +20,12 @@ interface InterviewSetting {
   id: number;
   label: string;
   dataList?: InterviewOptionData[];
-  value?: string;
-  dataSetter?: (value: string) => void;
+  value?: InterviewOptionData;
+  dataSetter?: (value: InterviewOptionData) => void;
 }
 
 const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [interviewSettings, setInterviewSettings] = useState<InterviewSetting[]>(INTERVIEW_SETTING_CONFIG);
-  // const [companyList, setCompanyList] = useState<string[]>([]);
-  // const [fieldList, setFieldList] = useState<string[]>([]);
-  // const [jobList, setJobList] = useState<string[]>([]);
-
   // 전역 상태/액션
   const selectedCompany = useInterviewStore((s) => s.selectedCompany);
   const selectedField = useInterviewStore((s) => s.selectedField);
@@ -37,20 +33,6 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
   const setSelectedCompany = useInterviewStore((s) => s.setSelectedCompany);
   const setSelectedField = useInterviewStore((s) => s.setSelectedField);
   const setSelectedJob = useInterviewStore((s) => s.setSelectedJob);
-
-  // useEffect(() => {
-  //   fetchCompanyAndJobList().then((res) => {
-  //     if (res === null) {
-  //       setCompanyList([]);
-  //       setFieldList([]);
-  //       setJobList([]);
-  //     } else {
-  //       setCompanyList(res.data.company);
-  //       setFieldList(res.data.field);
-  //       setJobList(res.data.job);
-  //     }
-  //   });
-  // }, []);
 
   useEffect(() => {
     const updatedSettings = INTERVIEW_SETTING_CONFIG.map((v, _) => {
@@ -66,8 +48,8 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
           return {
             ...v,
             dataList: INTERVIEW_FIELD_CATEGORY,
-            value: selectedField as string,
-            dataSetter: setSelectedField as Dispatch<SetStateAction<string>>,
+            value: selectedField,
+            dataSetter: setSelectedField,
           };
         case 2:
           return { ...v, dataList: INTERVIEW_FIELD_LIST, value: selectedJob, dataSetter: setSelectedJob };
@@ -107,14 +89,12 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
           return (
             <div key={v.id} className="flex flex-col gap-1  rounded-md">
               <div className="font-semibold">{v.label}</div>
-              {interviewSettings && (
-                <Dropdown
-                  dataList={v.dataList?.map((value) => value.label) ?? []}
-                  onChange={v.dataSetter ?? (() => {})}
-                  value={v.value ?? ""}
-                  bgColor="white"
-                />
-              )}
+              <Dropdown
+                dataList={v.dataList ?? []}
+                onChange={v.dataSetter ?? (() => {})}
+                value={v.value}
+                bgColor="white"
+              />
             </div>
           );
         })}
