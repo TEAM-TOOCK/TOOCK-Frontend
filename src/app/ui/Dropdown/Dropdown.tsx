@@ -3,11 +3,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import DownArrow from "@/assets/down-arrow.svg";
 import DropdownList from "./DropdownList";
+import { InterviewOptionData } from "@/app/interview-setup/constants/interviewSetting.constants";
 
 interface Props {
-  dataList: string[];
-  value: string;
-  onChange: (value: string) => void;
+  dataList: InterviewOptionData[];
+  value: InterviewOptionData | undefined;
+  onChange: (value: InterviewOptionData) => void;
   color?: string;
   bgColor?: string;
   border?: string;
@@ -48,7 +49,7 @@ const Dropdown = ({ dataList, value, onChange, color, bgColor, border }: Props) 
         className="flex flex-row items-center justify-between w-full h-[2.5rem] p-2"
       >
         <div className="w-full truncate" style={{ color: color }}>
-          {value}
+          {value?.label}
         </div>
         <DownArrow width="0.7rem" height="0.7rem" />
       </div>
