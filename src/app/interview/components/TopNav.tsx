@@ -8,7 +8,7 @@ import { BeatLoader } from "react-spinners";
 
 const TopNav = () => {
   const company = useInterviewStore((s) => s.selectedCompany);
-  const job = useInterviewStore((s) => s.selectedJob);
+  const field = useInterviewStore((s) => s.selectedField);
   const router = useRouter();
 
   const exitBtnClickHandler = () => {
@@ -19,12 +19,8 @@ const TopNav = () => {
       <div className="flex flex-row justify-start items-center gap-5">
         <BeatLoader speedMultiplier={0.5} color={"var(--color-blue-950)"} />
         <div className="hidden sm:flex flex-row gap-3">
-          <div className="flex justify-center items-center rounded-2xl border-2 px-3 py-1 text-xs">
-            {company}
-          </div>
-          <div className="flex justify-center items-center rounded-2xl border-2 px-3 py-1 text-xs">
-            {job}
-          </div>
+          <div className="flex justify-center items-center rounded-2xl border-2 px-3 py-1 text-xs">{company.label}</div>
+          <div className="flex justify-center items-center rounded-2xl border-2 px-3 py-1 text-xs">{field.label}</div>
         </div>
       </div>
       <Button

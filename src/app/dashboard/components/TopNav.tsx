@@ -5,7 +5,7 @@ import Logo from "@/assets/logo.svg";
 import Play from "@/assets/play.svg";
 import Logout from "@/assets/logout.svg";
 import Google from "@/assets/google.svg";
-import { SetStateAction, Dispatch } from "react";
+import { SetStateAction, Dispatch, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/user.store";
 
@@ -18,8 +18,18 @@ const TopNav = ({ isLoggedIn, setIsLoggedIn }: Props) => {
   const router = useRouter();
   const userName = useUserStore((s) => s.name);
   const resetProfile = useUserStore((s) => s.resetProfile);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setAccessToken(token);
+  }, []);
 
   const clickInterviewHandler = () => {
+    if (!accessToken) {
+      alert("로그인 후 면접 진행 가능합니다");
+      return;
+    }
     router.push("/interview-setup");
   };
   const clickLogoutHandler = () => {

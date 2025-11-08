@@ -35,6 +35,10 @@ const InterviewContainer = ({ qNum, setQuestionNum }: Props) => {
   });
 
   const nextBtnHandler = async () => {
+    if (!audioBlob) {
+      alert("면접에 대해 대답 후 넘어갈 수 있습니다");
+      return;
+    }
     sendResponseMutation.mutate(undefined, {
       onSuccess: (data: InterviewQuestion | undefined) => {
         if (data?.finished && sessionId) {
@@ -60,12 +64,6 @@ const InterviewContainer = ({ qNum, setQuestionNum }: Props) => {
           <AnswerBox key={`q-${qNum}`} isRecording={isRecording} start={start} stop={stop} audioURL={audioURL} />
           <div className="flex flex-row items-center justify-end">
             <div className="flex flex-row gap-3">
-              {/* <Button
-                label={"건너뛰기"}
-                clickHandler={() => setQuestionNum((prev) => prev + 1)}
-                border="solid var(--color-blue-950) 1px"
-                color="var(--color-blue-950)"
-              /> */}
               <Button label={"다음 질문"} clickHandler={nextBtnHandler} bgColor="var(--color-blue-950)" color="white" />
             </div>
           </div>
