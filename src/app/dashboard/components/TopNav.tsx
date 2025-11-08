@@ -5,7 +5,7 @@ import Logo from "@/assets/logo.svg";
 import Play from "@/assets/play.svg";
 import Logout from "@/assets/logout.svg";
 import Google from "@/assets/google.svg";
-import { SetStateAction, Dispatch } from "react";
+import { SetStateAction, Dispatch, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/user.store";
 
@@ -17,8 +17,13 @@ interface Props {
 const TopNav = ({ isLoggedIn, setIsLoggedIn }: Props) => {
   const router = useRouter();
   const userName = useUserStore((s) => s.name);
-  const accessToken = localStorage.getItem("accessToken");
   const resetProfile = useUserStore((s) => s.resetProfile);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setAccessToken(token);
+  }, []);
 
   const clickInterviewHandler = () => {
     if (!accessToken) {
