@@ -5,7 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { MoonLoader } from "react-spinners";
 import RecordCard from "./RecordCard";
-import { INIT_INTERVIEW_OPTION, InterviewOptionData } from "@/app/interview-setup/constants/interviewSetting.constants";
+import {
+  INIT_INTERVIEW_OPTION,
+  INTERVIEW_COMPANY_LIST,
+  INTERVIEW_FIELD_CATEGORY,
+  INTERVIEW_FIELD_LIST,
+  InterviewOptionData,
+} from "@/app/interview-setup/constants/interviewSetting.constants";
 
 interface Props {
   userInput: string;
@@ -40,11 +46,11 @@ const RecordSection = ({
         v.companyName.includes(userInput) || v.interviewFieldCategory.includes(userInput) || v.field.includes(userInput)
       );
     } else {
-      const matchCompany = !selectedCompany.label || v.companyName === selectedCompany.label;
+      const matchCompany = !selectedCompany.value || v.companyName === selectedCompany.value;
 
-      const matchCategory = !selectedFieldCategory.label || v.interviewFieldCategory === selectedFieldCategory.label;
+      const matchCategory = !selectedFieldCategory.value || v.interviewFieldCategory === selectedFieldCategory.value;
 
-      const matchField = !selectedField.label || v.field === selectedField.label;
+      const matchField = !selectedField.value || v.field === selectedField.value;
 
       return matchCompany && matchCategory && matchField;
     }
@@ -65,14 +71,17 @@ const RecordSection = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full rounded-md p-3 bg-blue-1 drop-shadow-sm">
             {filteredData.map((v) => {
               console.log("filtered:", v);
+              const company = INTERVIEW_COMPANY_LIST.find((item) => item.value === v.companyName)!;
+              const fieldCategory = INTERVIEW_FIELD_CATEGORY.find((item) => item.value === v.interviewFieldCategory)!;
+              const field = INTERVIEW_FIELD_LIST.find((item) => item.value === v.field)!;
 
               return (
                 <RecordCard
                   key={v.interviewSessionId}
                   id={v.interviewSessionId}
-                  company={v.companyName}
-                  fieldCategory={v.interviewFieldCategory}
-                  field={v.field}
+                  company={company}
+                  fieldCategory={fieldCategory}
+                  field={field}
                   date={v.date}
                   totalScore={v.maxScore}
                   totalQuestionNum={v.questionCount}

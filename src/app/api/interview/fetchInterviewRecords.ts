@@ -1,3 +1,4 @@
+import { InterviewOptionData } from "@/app/interview-setup/constants/interviewSetting.constants";
 import { ApiResponse, client } from "../client";
 
 interface InterviewRecord {

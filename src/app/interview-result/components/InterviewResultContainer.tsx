@@ -15,8 +15,6 @@ import { useInterviewSessionStore } from "@/stores/interviewSession.store";
 import { detailEvaluation, improvementsProposal } from "../utils/resultDataParser";
 
 const InterviewResultContainer = () => {
-  const company = useInterviewStore((s) => s.selectedCompany);
-  const job = useInterviewStore((s) => s.selectedJob);
   const sessionId = useInterviewSessionStore((s) => s.sessionId);
 
   // const search = useSearchParams();
