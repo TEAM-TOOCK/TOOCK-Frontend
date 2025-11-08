@@ -6,18 +6,34 @@ import SearchBar from "./components/SearchBar";
 import RecordSection from "./components/RecordSection";
 import { useEffect, useState } from "react";
 import ToockPromo from "./components/ToockPromo";
+import { useUserStore } from "@/stores/user.store";
+import { INIT_INTERVIEW_OPTION, InterviewOptionData } from "../interview-setup/constants/interviewSetting.constants";
 
 const Page = () => {
   const [userInput, setUserInput] = useState("");
-  const [selectedCompany, setSelectedCompany] = useState<string>("");
-  const [selectedJob, setSelectedJob] = useState<string>("");
+  const [selectedCompany, setSelectedCompany] = useState<InterviewOptionData>(INIT_INTERVIEW_OPTION);
+  const [selectedFieldCategory, setSelectedFieldCategory] = useState<InterviewOptionData>(INIT_INTERVIEW_OPTION);
+  const [selectedField, setSelectedField] = useState<InterviewOptionData>(INIT_INTERVIEW_OPTION);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const setUserProfile = useUserStore((state) => state.setUserProfile);
 
   useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      setIsLoggedIn(true);
+      return;
+    }
+
     const params = new URLSearchParams(window.location.search);
     const accessToken = params.get("accessToken");
-    if (accessToken) {
-      sessionStorage.setItem("accessToken", accessToken);
+
+    if (params && accessToken) {
+      localStorage.setItem("accessToken", accessToken as string);
+      setUserProfile({
+        memberId: Number(params.get("memberId")),
+        name: params.get("name") as string,
+        email: params.get("email") as string,
+      });
+
       window.history.replaceState({}, "", window.location.pathname);
       setIsLoggedIn(true);
     }
@@ -28,24 +44,35 @@ const Page = () => {
       <TopNav isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <div className="flex flex-col justify-start gap-10 sm:gap-5 w-[100%] sm:w-[70%] my-5 p-3 sm:p-0 flex-1">
         <ToockPromo />
-        <StatSection />
-        <div className="flex flex-col gap-5">
-          <SearchBar
-            setUserInput={setUserInput}
-            setSelectedCompany={setSelectedCompany}
-            setSelectedJob={setSelectedJob}
-            selectedCompany={selectedCompany}
-            selectedJob={selectedJob}
-            bgColor={"white"}
-            color={"var(--color-blue-950)"}
-          />
-          <RecordSection
-            userInput={userInput}
-            selectedCompany={selectedCompany}
-            selectedJob={selectedJob}
-            setSelectedCompany={setSelectedCompany}
-            setSelectedJob={setSelectedJob}
-          />
+        <div className="flex flex-col gap-5 relative">
+          {!isLoggedIn && (
+            <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full bg-slate-500/50 backdrop-blur-sm rounded-md z-50 text-xl font-extrabold text-blue-2">
+              로그인 후 사용가능합니다
+            </div>
+          )}
+          <StatSection isLoggedIn={isLoggedIn} />
+          <div className="flex flex-col gap-5">
+            <SearchBar
+              setUserInput={setUserInput}
+              setSelectedCompany={setSelectedCompany}
+              setSelectedFieldCategory={setSelectedFieldCategory}
+              setSelectedField={setSelectedField}
+              selectedCompany={selectedCompany}
+              selectedFieldCategory={selectedFieldCategory}
+              selectedField={selectedField}
+              bgColor={"white"}
+              color={"var(--color-blue-950)"}
+            />
+            <RecordSection
+              userInput={userInput}
+              setSelectedCompany={setSelectedCompany}
+              setSelectedFieldCategory={setSelectedFieldCategory}
+              setSelectedField={setSelectedField}
+              selectedCompany={selectedCompany}
+              selectedFieldCategory={selectedFieldCategory}
+              selectedField={selectedField}
+            />
+          </div>
         </div>
       </div>
       <div className="flex items-center justify-center w-full h-[10rem] bg-slate-100 text-slate-500">

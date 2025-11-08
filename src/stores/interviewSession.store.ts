@@ -7,6 +7,8 @@ type InterviewSessionState = {
   /** 현재 질문 텍스트 */
   questionText: string | null;
 
+  setSessionId: (input: { sessionId: number }) => void;
+
   /** 세션/질문 셋업 (API 응답 직후 1회 호출) */
   setSession: (input: { sessionId: number; questionText: string }) => void;
 
@@ -22,6 +24,8 @@ export const useInterviewSessionStore = create<InterviewSessionState>()(
     (set) => ({
       sessionId: null,
       questionText: null,
+
+      setSessionId: ({ sessionId }) => set({ sessionId }),
 
       setSession: ({ sessionId, questionText }) => set({ sessionId, questionText }),
 

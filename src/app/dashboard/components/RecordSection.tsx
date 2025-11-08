@@ -5,44 +5,59 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { MoonLoader } from "react-spinners";
 import RecordCard from "./RecordCard";
+import {
+  INIT_INTERVIEW_OPTION,
+  INTERVIEW_COMPANY_LIST,
+  INTERVIEW_FIELD_CATEGORY,
+  INTERVIEW_FIELD_LIST,
+  InterviewOptionData,
+} from "@/app/interview-setup/constants/interviewSetting.constants";
 
 interface Props {
   userInput: string;
-  selectedCompany: string;
-  selectedJob: string;
-  setSelectedCompany: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedJob: React.Dispatch<React.SetStateAction<string>>;
+  selectedCompany: InterviewOptionData;
+  selectedFieldCategory: InterviewOptionData;
+  selectedField: InterviewOptionData;
+  setSelectedCompany: React.Dispatch<React.SetStateAction<InterviewOptionData>>;
+  setSelectedFieldCategory: React.Dispatch<React.SetStateAction<InterviewOptionData>>;
+  setSelectedField: React.Dispatch<React.SetStateAction<InterviewOptionData>>;
 }
 
-const RecordSection = ({ userInput, selectedCompany, selectedJob, setSelectedCompany, setSelectedJob }: Props) => {
+const RecordSection = ({
+  userInput,
+  selectedCompany,
+  selectedFieldCategory,
+  selectedField,
+  setSelectedCompany,
+  setSelectedFieldCategory,
+  setSelectedField,
+}: Props) => {
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["interview-records"],
     queryFn: () => fetchInterviewRecords(),
   });
 
-  const filteredData = data?.data.filter((v) => {
+  const filteredData = data?.filter((v) => {
     if (userInput) {
-      setSelectedCompany("");
-      setSelectedJob("");
-      return v.company.includes(userInput) || v.job.includes(userInput);
+      setSelectedCompany(INIT_INTERVIEW_OPTION);
+      setSelectedFieldCategory(INIT_INTERVIEW_OPTION);
+      setSelectedField(INIT_INTERVIEW_OPTION);
+      return (
+        v.companyName.includes(userInput) || v.interviewFieldCategory.includes(userInput) || v.field.includes(userInput)
+      );
     } else {
-      if (selectedCompany && !selectedJob) {
-        return v.company === selectedCompany;
-      } else if (!selectedCompany && selectedJob) {
-        return v.job === selectedJob;
-      } else if (selectedCompany && selectedJob) {
-        return v.company === selectedCompany && v.job === selectedJob;
-      } else {
-        return true;
-      }
+      const matchCompany = !selectedCompany.value || v.companyName === selectedCompany.value;
+
+      const matchCategory = !selectedFieldCategory.value || v.interviewFieldCategory === selectedFieldCategory.value;
+
+      const matchField = !selectedField.value || v.field === selectedField.value;
+
+      return matchCompany && matchCategory && matchField;
     }
   });
 
   return (
     <>
-      {/* <div className="flex items-center justify-center w-full h-full">
-        <MoonLoader />
-      </div> */}
       {isPending ? (
         <div className="flex items-center justify-center w-full h-full">
           <MoonLoader color={"white"} />
@@ -52,17 +67,20 @@ const RecordSection = ({ userInput, selectedCompany, selectedJob, setSelectedCom
         filteredData.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full rounded-md p-3 bg-blue-1 drop-shadow-sm">
             {filteredData.map((v) => {
-              console.log("filtered:", v);
+              const company = INTERVIEW_COMPANY_LIST.find((item) => item.value === v.companyName)!;
+              const fieldCategory = INTERVIEW_FIELD_CATEGORY.find((item) => item.value === v.interviewFieldCategory)!;
+              const field = INTERVIEW_FIELD_LIST.find((item) => item.value === v.field)!;
 
               return (
                 <RecordCard
-                  key={v.id}
-                  id={v.id}
-                  company={v.company}
-                  job={v.job}
+                  key={v.interviewSessionId}
+                  id={v.interviewSessionId}
+                  company={company}
+                  fieldCategory={fieldCategory}
+                  field={field}
                   date={v.date}
-                  totalScore={v.totalScore}
-                  totalQuestionNum={v.totalQuestionNum}
+                  totalScore={v.maxScore}
+                  totalQuestionNum={v.questionCount}
                 />
               );
             })}

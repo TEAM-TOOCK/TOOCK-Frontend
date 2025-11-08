@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { STATS_CONFIG } from "../constants/statsCards.constants";
 import StatsCard from "./StatsCard";
-import { userStatistics } from "@/app/dashboard/mockData";
+
 import { fetchInterviewStatistics } from "@/app/api/dashboard/fetchDashboardData";
 import { useQuery } from "@tanstack/react-query";
 import MoonLoader from "react-spinners/MoonLoader";
 
-const StatSection = () => {
+const StatSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["statistics"],
     queryFn: fetchInterviewStatistics,
+    enabled: isLoggedIn,
   });
+
 
   return (
     <div
@@ -19,8 +21,12 @@ const StatSection = () => {
       w-[100%]
       "
     >
-      {isPending ? (
-        <MoonLoader />
+
+      {isLoggedIn && isPending ? (
+        <div className="flex flex-col w-full justify-center items-center">
+          <MoonLoader />
+        </div>
+
       ) : (
         STATS_CONFIG.map((item, index) => {
           return { ...item, data: Object.values(data ?? {})[index] };

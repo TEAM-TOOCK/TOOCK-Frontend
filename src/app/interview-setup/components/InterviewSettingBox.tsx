@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
+import React, { useEffect, useState } from "react";
 import {
   INTERVIEW_COMPANY_LIST,
   INTERVIEW_FIELD_CATEGORY,
@@ -12,7 +12,6 @@ import Dropdown from "@/app/ui/Dropdown/Dropdown";
 import Button from "@/app/ui/Button";
 import Play from "@/assets/play.svg";
 import { INTERVIEW_RULES } from "../constants/interviewRules.constants";
-import { fetchCompanyAndJobList } from "@/app/api/interview/fetchCompanyJobList";
 import { useInterviewStore } from "@/stores/interview.store";
 import { toast } from "react-toastify";
 
@@ -28,11 +27,11 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
   const [interviewSettings, setInterviewSettings] = useState<InterviewSetting[]>(INTERVIEW_SETTING_CONFIG);
   // 전역 상태/액션
   const selectedCompany = useInterviewStore((s) => s.selectedCompany);
+  const selectedFieldCategory = useInterviewStore((s) => s.selectedFieldCategory);
   const selectedField = useInterviewStore((s) => s.selectedField);
-  const selectedJob = useInterviewStore((s) => s.selectedJob);
   const setSelectedCompany = useInterviewStore((s) => s.setSelectedCompany);
+  const setSelectedFieldCategory = useInterviewStore((s) => s.setSelectedFieldCategory);
   const setSelectedField = useInterviewStore((s) => s.setSelectedField);
-  const setSelectedJob = useInterviewStore((s) => s.setSelectedJob);
 
   useEffect(() => {
     const updatedSettings = INTERVIEW_SETTING_CONFIG.map((v, _) => {
@@ -48,21 +47,21 @@ const InterviewSettingBox = ({ setIsModal }: { setIsModal: React.Dispatch<React.
           return {
             ...v,
             dataList: INTERVIEW_FIELD_CATEGORY,
-            value: selectedField,
-            dataSetter: setSelectedField,
+            value: selectedFieldCategory,
+            dataSetter: setSelectedFieldCategory,
           };
         case 2:
-          return { ...v, dataList: INTERVIEW_FIELD_LIST, value: selectedJob, dataSetter: setSelectedJob };
+          return { ...v, dataList: INTERVIEW_FIELD_LIST, value: selectedField, dataSetter: setSelectedField };
         default:
           return v;
       }
     });
     setInterviewSettings(updatedSettings);
-  }, [selectedCompany, selectedField, selectedJob]);
+  }, [selectedCompany, selectedFieldCategory, selectedField]);
 
   const clickStartInterviewHandler = () => {
-    if (!selectedCompany || !selectedJob) {
-      toast.error("기업과 직무를 모두 선택해주세요!", {
+    if (!selectedCompany || !selectedFieldCategory || !selectedField) {
+      toast.error("지원기업과 모집파트와 지원직무를 모두 선택해주세요!", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,

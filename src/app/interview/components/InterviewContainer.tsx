@@ -5,7 +5,6 @@ import QuestionBox from "./QuestionBox";
 import AnswerBox from "./AnswerBox";
 import Button from "@/app/ui/Button";
 import { useAudioRecorder } from "@/utils/useAudioRecorder";
-import { useInterviewDataStore } from "@/stores/interviewData.store";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { MoonLoader } from "react-spinners";

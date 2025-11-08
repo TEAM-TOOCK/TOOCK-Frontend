@@ -1,25 +1,24 @@
+import { InterviewOptionData } from "@/app/interview-setup/constants/interviewSetting.constants";
 import { ApiResponse, client } from "../client";
 
 interface InterviewRecord {
-  id: number;
-  company: string;
-  job: string;
+  interviewSessionId: number;
+  companyName: string;
+  interviewFieldCategory: string;
+  field: string;
   date: string;
-  totalScore: number;
-  totalQuestionNum: number;
-}
-
-interface InterviewRecordResponse extends ApiResponse {
-  data: InterviewRecord[];
+  score: number;
+  maxScore: number;
+  questionCount: number;
 }
 
 export const fetchInterviewRecords = async () => {
   try {
-    const response = await client.get(`interview-records`).json<InterviewRecordResponse>();
+    const response = await client.get(`users/interviews`).json<ApiResponse<InterviewRecord[]>>();
     console.log(response);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("[Interview Records Fetch Error]", error);
-    return null;
+    throw new Error("[Interview Records Fetch Error]");
   }
 };
