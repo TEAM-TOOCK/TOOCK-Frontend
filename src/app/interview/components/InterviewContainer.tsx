@@ -35,6 +35,7 @@ const InterviewContainer = ({ qNum, setQuestionNum }: Props) => {
   });
 
   const nextBtnHandler = async () => {
+    if (!audioBlob) alert("면접에 대해 대답 후 넘어갈 수 있습니다");
     sendResponseMutation.mutate(undefined, {
       onSuccess: (data: InterviewQuestion | undefined) => {
         if (data?.finished && sessionId) {

@@ -17,9 +17,14 @@ interface Props {
 const TopNav = ({ isLoggedIn, setIsLoggedIn }: Props) => {
   const router = useRouter();
   const userName = useUserStore((s) => s.name);
+  const accessToken = localStorage.getItem("accessToken");
   const resetProfile = useUserStore((s) => s.resetProfile);
 
   const clickInterviewHandler = () => {
+    if (!accessToken) {
+      alert("로그인 후 면접 진행 가능합니다");
+      return;
+    }
     router.push("/interview-setup");
   };
   const clickLogoutHandler = () => {
