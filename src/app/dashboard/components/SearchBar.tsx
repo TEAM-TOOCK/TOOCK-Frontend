@@ -7,6 +7,7 @@ import React from "react";
 import MagnifyingGlasses from "@/assets/magnifying-glasses.svg";
 import Reset from "@/assets/reset.svg";
 import {
+  INIT_INTERVIEW_OPTION,
   INTERVIEW_COMPANY_LIST,
   INTERVIEW_FIELD_CATEGORY,
   INTERVIEW_FIELD_LIST,
@@ -41,20 +42,14 @@ const SearchBar = ({
   //   queryFn: () => fetchCompanyAndJobList(),
   // });
 
-  const initInterviewOption = {
-    id: -1,
-    label: "",
-    value: "",
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
   };
 
   const resetBtnClickHandler = () => {
-    setSelectedCompany(initInterviewOption);
-    setSelectedFieldCategory(initInterviewOption);
-    setSelectedField(initInterviewOption);
+    setSelectedCompany(INIT_INTERVIEW_OPTION);
+    setSelectedFieldCategory(INIT_INTERVIEW_OPTION);
+    setSelectedField(INIT_INTERVIEW_OPTION);
     setUserInput("");
   };
 
@@ -96,8 +91,8 @@ const SearchBar = ({
         <div className="w-[50%]">
           <Dropdown
             dataList={INTERVIEW_FIELD_LIST ?? []}
-            onChange={setSelectedCompany}
-            value={selectedCompany}
+            onChange={setSelectedField}
+            value={selectedField}
             color={"#162456"}
             bgColor={"white"}
           />

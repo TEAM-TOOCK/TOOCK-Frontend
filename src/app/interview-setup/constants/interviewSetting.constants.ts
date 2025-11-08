@@ -19,6 +19,12 @@ export interface InterviewOptionData {
   label: string;
 }
 
+export const INIT_INTERVIEW_OPTION = {
+  id: -1,
+  label: "",
+  value: "",
+};
+
 export const INTERVIEW_COMPANY_LIST: InterviewOptionData[] = [
   {
     id: 0,

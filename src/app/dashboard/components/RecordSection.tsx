@@ -5,16 +5,27 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { MoonLoader } from "react-spinners";
 import RecordCard from "./RecordCard";
+import { INIT_INTERVIEW_OPTION, InterviewOptionData } from "@/app/interview-setup/constants/interviewSetting.constants";
 
 interface Props {
   userInput: string;
-  selectedCompany: string;
-  selectedJob: string;
-  setSelectedCompany: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedJob: React.Dispatch<React.SetStateAction<string>>;
+  selectedCompany: InterviewOptionData;
+  selectedFieldCategory: InterviewOptionData;
+  selectedField: InterviewOptionData;
+  setSelectedCompany: React.Dispatch<React.SetStateAction<InterviewOptionData>>;
+  setSelectedFieldCategory: React.Dispatch<React.SetStateAction<InterviewOptionData>>;
+  setSelectedField: React.Dispatch<React.SetStateAction<InterviewOptionData>>;
 }
 
-const RecordSection = ({ userInput, selectedCompany, selectedJob, setSelectedCompany, setSelectedJob }: Props) => {
+const RecordSection = ({
+  userInput,
+  selectedCompany,
+  selectedFieldCategory,
+  selectedField,
+  setSelectedCompany,
+  setSelectedFieldCategory,
+  setSelectedField,
+}: Props) => {
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["interview-records"],
     queryFn: () => fetchInterviewRecords(),
@@ -22,8 +33,9 @@ const RecordSection = ({ userInput, selectedCompany, selectedJob, setSelectedCom
 
   const filteredData = data?.data.filter((v) => {
     if (userInput) {
-      setSelectedCompany("");
-      setSelectedJob("");
+      setSelectedCompany(INIT_INTERVIEW_OPTION);
+      setSelectedFieldCategory(INIT_INTERVIEW_OPTION);
+      setSelectedField(INIT_INTERVIEW_OPTION);
       return v.company.includes(userInput) || v.job.includes(userInput);
     } else {
       if (selectedCompany && !selectedJob) {

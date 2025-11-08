@@ -7,11 +7,13 @@ import RecordSection from "./components/RecordSection";
 import { useEffect, useState } from "react";
 import ToockPromo from "./components/ToockPromo";
 import { useUserStore } from "@/stores/user.store";
+import { INIT_INTERVIEW_OPTION, InterviewOptionData } from "../interview-setup/constants/interviewSetting.constants";
 
 const Page = () => {
   const [userInput, setUserInput] = useState("");
-  const [selectedCompany, setSelectedCompany] = useState<string>("");
-  const [selectedJob, setSelectedJob] = useState<string>("");
+  const [selectedCompany, setSelectedCompany] = useState<InterviewOptionData>(INIT_INTERVIEW_OPTION);
+  const [selectedFieldCategory, setSelectedFieldCategory] = useState<InterviewOptionData>(INIT_INTERVIEW_OPTION);
+  const [selectedField, setSelectedField] = useState<InterviewOptionData>(INIT_INTERVIEW_OPTION);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const setUserProfile = useUserStore((state) => state.setUserProfile);
 
@@ -53,18 +55,22 @@ const Page = () => {
             <SearchBar
               setUserInput={setUserInput}
               setSelectedCompany={setSelectedCompany}
-              setSelectedJob={setSelectedJob}
+              setSelectedFieldCategory={setSelectedFieldCategory}
+              setSelectedField={setSelectedField}
               selectedCompany={selectedCompany}
-              selectedJob={selectedJob}
+              selectedFieldCategory={selectedFieldCategory}
+              selectedField={selectedField}
               bgColor={"white"}
               color={"var(--color-blue-950)"}
             />
             <RecordSection
               userInput={userInput}
-              selectedCompany={selectedCompany}
-              selectedJob={selectedJob}
               setSelectedCompany={setSelectedCompany}
-              setSelectedJob={setSelectedJob}
+              setSelectedFieldCategory={setSelectedFieldCategory}
+              setSelectedField={setSelectedField}
+              selectedCompany={selectedCompany}
+              selectedFieldCategory={selectedFieldCategory}
+              selectedField={selectedField}
             />
           </div>
         </div>
