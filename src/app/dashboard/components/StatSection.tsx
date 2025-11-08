@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { STATS_CONFIG } from "../constants/statsCards.constants";
 import StatsCard from "./StatsCard";
+
 import { fetchInterviewStatistics } from "@/app/api/dashboard/fetchDashboardData";
 import { useQuery } from "@tanstack/react-query";
 import MoonLoader from "react-spinners/MoonLoader";
@@ -12,6 +13,7 @@ const StatSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     enabled: isLoggedIn,
   });
 
+
   return (
     <div
       className="
@@ -19,10 +21,12 @@ const StatSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       w-[100%]
       "
     >
+
       {isLoggedIn && isPending ? (
         <div className="flex flex-col w-full justify-center items-center">
           <MoonLoader />
         </div>
+
       ) : (
         STATS_CONFIG.map((item, index) => {
           return { ...item, data: Object.values(data ?? {})[index] };

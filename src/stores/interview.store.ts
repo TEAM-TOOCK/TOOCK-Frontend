@@ -12,6 +12,12 @@ type InterviewState = {
   reset: () => void;
 };
 
+const initialInterviewOption = {
+  id: -1,
+  label: "",
+  value: "",
+};
+
 export const useInterviewStore = create<InterviewState>()(
   persist(
     (set) => ({
