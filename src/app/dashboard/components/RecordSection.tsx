@@ -31,22 +31,22 @@ const RecordSection = ({
     queryFn: () => fetchInterviewRecords(),
   });
 
-  const filteredData = data?.data.filter((v) => {
+  const filteredData = data?.filter((v) => {
     if (userInput) {
       setSelectedCompany(INIT_INTERVIEW_OPTION);
       setSelectedFieldCategory(INIT_INTERVIEW_OPTION);
       setSelectedField(INIT_INTERVIEW_OPTION);
-      return v.company.includes(userInput) || v.job.includes(userInput);
+      return (
+        v.companyName.includes(userInput) || v.interviewFieldCategory.includes(userInput) || v.field.includes(userInput)
+      );
     } else {
-      if (selectedCompany && !selectedJob) {
-        return v.company === selectedCompany;
-      } else if (!selectedCompany && selectedJob) {
-        return v.job === selectedJob;
-      } else if (selectedCompany && selectedJob) {
-        return v.company === selectedCompany && v.job === selectedJob;
-      } else {
-        return true;
-      }
+      const matchCompany = !selectedCompany.label || v.companyName === selectedCompany.label;
+
+      const matchCategory = !selectedFieldCategory.label || v.interviewFieldCategory === selectedFieldCategory.label;
+
+      const matchField = !selectedField.label || v.field === selectedField.label;
+
+      return matchCompany && matchCategory && matchField;
     }
   });
 
@@ -68,13 +68,14 @@ const RecordSection = ({
 
               return (
                 <RecordCard
-                  key={v.id}
-                  id={v.id}
-                  company={v.company}
-                  job={v.job}
+                  key={v.interviewSessionId}
+                  id={v.interviewSessionId}
+                  company={v.companyName}
+                  fieldCategory={v.interviewFieldCategory}
+                  field={v.field}
                   date={v.date}
-                  totalScore={v.totalScore}
-                  totalQuestionNum={v.totalQuestionNum}
+                  totalScore={v.maxScore}
+                  totalQuestionNum={v.questionCount}
                 />
               );
             })}

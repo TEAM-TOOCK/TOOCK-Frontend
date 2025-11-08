@@ -13,9 +13,9 @@ interface InterviewRecord {
 
 export const fetchInterviewRecords = async () => {
   try {
-    const response = await client.get(`users/interviews`).json<ApiResponse<InterviewRecord>>();
+    const response = await client.get(`users/interviews`).json<ApiResponse<InterviewRecord[]>>();
     console.log(response);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("[Interview Records Fetch Error]", error);
     throw new Error("[Interview Records Fetch Error]");
