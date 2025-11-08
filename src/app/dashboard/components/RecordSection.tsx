@@ -58,9 +58,6 @@ const RecordSection = ({
 
   return (
     <>
-      {/* <div className="flex items-center justify-center w-full h-full">
-        <MoonLoader />
-      </div> */}
       {isPending ? (
         <div className="flex items-center justify-center w-full h-full">
           <MoonLoader color={"white"} />
@@ -70,7 +67,6 @@ const RecordSection = ({
         filteredData.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full rounded-md p-3 bg-blue-1 drop-shadow-sm">
             {filteredData.map((v) => {
-              console.log("filtered:", v);
               const company = INTERVIEW_COMPANY_LIST.find((item) => item.value === v.companyName)!;
               const fieldCategory = INTERVIEW_FIELD_CATEGORY.find((item) => item.value === v.interviewFieldCategory)!;
               const field = INTERVIEW_FIELD_LIST.find((item) => item.value === v.field)!;

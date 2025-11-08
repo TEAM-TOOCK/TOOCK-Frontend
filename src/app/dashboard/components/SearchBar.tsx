@@ -1,8 +1,6 @@
 "use client";
 
-import { fetchCompanyAndJobList } from "@/app/api/interview/fetchCompanyJobList";
 import Dropdown from "@/app/ui/Dropdown/Dropdown";
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import MagnifyingGlasses from "@/assets/magnifying-glasses.svg";
 import Reset from "@/assets/reset.svg";
@@ -37,11 +35,6 @@ const SearchBar = ({
   color,
   bgColor,
 }: Props) => {
-  // const { isPending, isError, data, error } = useQuery({
-  //   queryKey: ["company-job-list"],
-  //   queryFn: () => fetchCompanyAndJobList(),
-  // });
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
   };
